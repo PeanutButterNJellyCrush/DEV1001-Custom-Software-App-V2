@@ -23,7 +23,23 @@ def main():
             user_credentials = json.load(file)
             
 
-        
+    #main menu options
+    typer.echo('You have [calories]/[target] today.')
+    typer.echo('You have [calories]/[target] this week')
+    typer.echo('Options:\n 1. Set calories target 2.Add calorie entry 3.Help 4.Quit')
+            
+    choice = typer.prompt('Enter option:', type=int)
+    if choice == 1:
+        typer.echo('Set calorie target')
+    if choice == 2:
+        typer.echo('Add calorie entry')
+    if choice == 3:
+        typer.echo('Help')
+    if choice == 4:
+        typer.echo('Quit')
+    else:
+        typer.echo('Invalid request. Please try again using the above options.')
+
 
         
         
