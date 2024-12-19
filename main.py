@@ -3,34 +3,28 @@ import json
 
 
 def main():
-    user_name_input = typer.prompt("What's your name?")
-    print(f'Hello {user_name_input}')
+    '''Prompt for name and PIN
+    '''
+    user_name_input = typer.prompt('Enter your name')
     user_pin_input = typer.prompt('Enter PIN')
-    typer.echo(user_pin_input)
-    #user_pin_input=hashlib.sha256(user_pin.encode()).hexdigest()           hashedpin
+    typer.echo(f'{user_name_input}:{user_pin_input}')
     
-    # user_credentials = {
-    #     'Name:':user_pin_input,
-    #     'user_pin_input':user_pin_input
-    # }
+    #Dictionary for user_name & user_pin
     user_credentials = {
-        'name':'bonnie',
-        'pin': 'd'
+        'Name:':user_name_input,
+        'user_pin_input':user_pin_input
     }
-        #open file to check key-value pair from json data
-    # with open('user_name_pin_data','r', encoding='utf-8') as file:
-    #         user_credentials = json.load(file)
+    #check if user file exists, if not,m create it with empty state
+    with open('user_name_pin_data','w', encoding='utf-8') as file:
+        json.dump(user_credentials, file, indent=4)
+    
+    # load user file with state
+    with open('user_name_pin_data','r', encoding='utf-8') as file:
+            user_credentials = json.load(file)
             
-    for name in user_credentials:
-        if name['name']=='bonnie' and name['pin']=='d':
-            print('success')
-            
-   
-    # except FileNotFoundError:
-    #     user_name_pin_data.append(user_credentials)
+
         
-    # with open('user_name_pin_data','w', encoding='utf-8') as file:
-    #     json.dump(user_credentials, file, indent=4)
+
         
         
         
