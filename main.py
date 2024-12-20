@@ -45,9 +45,21 @@ def main():
                 calorie_daily_target_data = json.load(file)
                 print(calorie_daily_target_data)
             
-            
         case 2:
             typer.echo('Add calorie entry')
+            #add calories to the day & save to json file
+            calories_entry = typer.prompt('Enter calories you would like to add today', type=int)
+            calories_entry_today = {
+                'Date': 'date today'
+                'Calories to add': calories_entry
+            }
+            with open('calories_entry_today','w', encoding='utf-8') as file:
+                json.dump(calories_entry_today, file, indent=4)
+            with open('calories_entry_today','r', encoding='utf-8') as file:
+                calories_entry_today = json.load(file)
+                print(calories_entry_today)
+
+            
             
         case 3:
             typer.echo('Help')
