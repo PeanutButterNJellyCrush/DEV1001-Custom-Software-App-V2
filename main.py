@@ -4,8 +4,8 @@ from datetime import date
 
 def main():
     
-    user_name_input = str(input('Enter your name'))
-    user_pin_input = int(input('Enter PIN'))
+    user_name_input = str(input('Enter your name: ' ))
+    user_pin_input = int(input('Enter PIN: ' ))
     
     #Dictionary for user_name & user_pin
     user_credentials_input = {
@@ -13,8 +13,10 @@ def main():
         'PIN':user_pin_input
     }
     print(user_credentials_input)
-
+    
     user_credentials = {
+        'Name:':'bonnie',
+        'PIN':'456'
     }
         
     try:     
@@ -24,11 +26,13 @@ def main():
             
         if user_credentials == user_credentials_input:
             print('login details present')
-            with open('user_credentials.json','w', encoding='utf-8') as file:
-                    json.dump(user_credentials, file, indent=4)    
+
         else:
-            print('no valid login details.')
-    #if not, create one
+            with open('user_credentials.json','w', encoding='utf-8') as file:
+                json.dump(user_credentials_input, file, indent=4)   
+        print('login saved') 
+            
+    #if not, create one 
     except FileNotFoundError:
         print('error')
 
@@ -97,6 +101,7 @@ def main():
             return_to_menu = ('Enter any key to return to menu')
         case 4:
             print('Quit')
+            quit()
             
             
 if __name__ == "__main__":
