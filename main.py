@@ -53,18 +53,15 @@ def main():
             print(calories_entry)
             today = date.today().isoformat()
             print(today)
-            # calories_entry_today = {
-            #     'Date': 'date today'
-            #     'Calories to add': calories_entry
-            # }
-            # with open('calories_entry_today','w', encoding='utf-8') as file:
-            #     json.dump(calories_entry_today, file, indent=4)
-            # with open('calories_entry_today','r', encoding='utf-8') as file:
-            #     calories_entry_today = json.load(file)
-            #     print(calories_entry_today)
-
-            
-            
+            calories_entry_today = {
+                'Date': 'date today',
+                'Calories to add':calories_entry
+            }
+            with open('calories_entry_today','w', encoding='utf-8') as file:
+                json.dump(calories_entry_today, file, indent=4)
+            with open('calories_entry_today','r', encoding='utf-8') as file:
+                calories_entry_today = json.load(file)
+                print(calories_entry_today)
         case 3:
             typer.echo('Help')
         case 4:
