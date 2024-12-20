@@ -14,10 +14,10 @@ def main():
     }
     print(user_credentials_input)
     
-    user_credentials = {
-        'Name:':'bonnie',
-        'PIN':'456'
-    }
+    # user_credentials = {
+    #     'Name:':'bonnie',
+    #     'PIN':'456'
+    # } debugging purposes
         
     try:     
     #check if user file exists      
@@ -38,17 +38,16 @@ def main():
 
 
     #main menu options
-    print('You have [calories]/ today.')
+    print('You have [calories]/ [{calorie_daily_target}]today.')
     print('You have [calories]/[target] this week')
     print('Options:\n 1.Set calories target \n 2.Add calorie entry \n 3.Help \n 4.Quit')
             
-    choice = int(input('Enter option'))
+    choice = int(input('Enter option: '))
     
     match choice:
         case 1:
-            print('Set calorie target')
             #set calories target & save to json file
-            calorie_daily_target = int(input('Set your daily target calorie'))
+            calorie_daily_target = (input('Set your daily target calorie: '))
             today = date.today().isoformat()
             
             calorie_daily_target_data = {
@@ -56,18 +55,12 @@ def main():
                 'Calories daily': calorie_daily_target,
                 'Date': today
             }
-            #open file to check if name and calories daily match
-            with open('calories_daily_target','r', encoding='utf-8') as file:
+            #write to file
+            with open('calories_daily_target','w', encoding='utf-8') as file:
                 calorie_daily_target_data = json.load(file)
                 print(calorie_daily_target_data)
-                
-            #iterate though data to check
-            for entry in calorie_daily_target:
-                print(entry)
-            for entry in calorie_daily_target.entry():
-                print(entry)
-                
-                
+ 
+        
                 # for entry in calorie_daily_target_data:
                 #     if entry.get('Name') == user_name_input:
                 #         if 'Calories daily' in entry:
