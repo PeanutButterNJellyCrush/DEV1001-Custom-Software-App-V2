@@ -4,8 +4,8 @@ from datetime import date
 
 def main():
     
-    user_name_input = str(input('Enter your name: ' ))
-    user_pin_input = int(input('Enter PIN: ' ))
+    user_name_input = (input('Enter your name: ' ))
+    user_pin_input = (input('Enter PIN: ' ))
     
     #Dictionary for user_name & user_pin
     user_credentials_input = {
