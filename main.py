@@ -55,27 +55,28 @@ def main():
                 'Calories daily': calorie_daily_target,
                 'Date': today
             }
+            try:
             #write to file
-            with open('calories_daily_target','w', encoding='utf-8') as file:
-                calorie_daily_target_data = json.load(file)
-                print(calorie_daily_target_data)
- 
-        
-                # for entry in calorie_daily_target_data:
-                #     if entry.get('Name') == user_name_input:
-                #         if 'Calories daily' in entry:
-                #             return True, entry['Calories daily']
-                #         else: #if not found, write into file
-                #             with open('calories_daily_target','w', encoding='utf-8') as file:
-                #                 json.dump(calorie_daily_target_data, file, indent=4)
-                 
-                # print('data match')
+                with open('calories_daily_target.json','r', encoding='utf-8') as file:
+                    calorie_daily_target_data = json.load(file)
+                    calorie_daily_target_data.append(calorie_daily_target)
+            
+                with open('calories_daily_target.json', 'w', encoding='utf-8') as file:
+                    json.dump(calorie_daily_target_data, file, indent=4)
+                    print(f'Calorie target {calorie_daily_target} has been updated.')
+            
+            except FileNotFoundError:
+        # If file doesn't exist, create it with new data
+                with open('calories_daily_target.json', 'w', encoding='utf-8') as file:
+                    json.dump(calorie_daily_target_data, file, indent=4)
+                    print(f'Calorie target {calorie_daily_target} has been updated.')
+            
 
             
         case 2:
             print('Add calorie entry')
             #add calories to the day & save to json file
-            calories_entry = int(input('Enter calories you would like to add today', type=int))
+            calories_entry = (input('Enter calories you would like to add today.' ))
             print(calories_entry)
             today = date.today().isoformat()
             print(today)
