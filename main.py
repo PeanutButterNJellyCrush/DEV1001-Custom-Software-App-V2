@@ -36,15 +36,28 @@ def main():
             typer.echo('Set calorie target')
             #set calories target & save to json file
             calorie_daily_target = typer.prompt('Set your daily target calorie', type=int)
+            today = date.today().isoformat()
+            
             calorie_daily_target_data = {
                 'Name':user_name_input,
-                'Calories daily': calorie_daily_target
+                'Calories daily': calorie_daily_target,
+                'Date': today
             }
-            with open('calories_daily_target','w', encoding='utf-8') as file:
-                json.dump(calorie_daily_target_data, file, indent=4)
+            #open file to check if name and calories daily match
             with open('calories_daily_target','r', encoding='utf-8') as file:
                 calorie_daily_target_data = json.load(file)
                 print(calorie_daily_target_data)
+            #iterate though data to check
+                for entry in calorie_daily_target_data:
+                    if entry.get('Name') == user_name_input:
+                        if 'Calories daily' in entry:
+                            return True, entry['Calories daily']
+                        else: #if not found, write into file
+                            with open('calories_daily_target','w', encoding='utf-8') as file:
+                                json.dump(calorie_daily_target_data, file, indent=4)
+                 
+                print('data match')
+
             
         case 2:
             typer.echo('Add calorie entry')
@@ -64,6 +77,8 @@ def main():
                 print(calories_entry_today)
         case 3:
             typer.echo('Help')
+            typer.echo('Follow the menu instructions to track and view your calories')
+            return_to_menu = typer.prompt('Enter any key to return to menu')
         case 4:
             typer.echo('Quit')
 
