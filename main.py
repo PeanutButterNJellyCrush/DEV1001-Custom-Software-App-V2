@@ -40,11 +40,7 @@ def main():
     
     match choice:
         case 1:
-                calorie_daily_target_data = {
-                'Name':user_name_input,
-                'Calories daily': calorie_daily_target,
-                'Date': today
-            }
+
             
                 target_calories_set = input('Do you have target calories set? Y/N')
                 if target_calories_set.upper() == 'Y':
@@ -58,6 +54,12 @@ def main():
                         print('oops')
                 
                 elif target_calories_set.upper() == 'N':
+                    
+                    calorie_daily_target = {
+                    'Name':user_name_input,
+                    'Calories daily': calorie_daily_target,
+                    'Date': today
+                }
                     calorie_daily_target = int(input('Set your daily target calorie: '))
                     today = date.today().isoformat()
                     
