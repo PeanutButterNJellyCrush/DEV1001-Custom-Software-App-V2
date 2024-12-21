@@ -62,7 +62,7 @@ def main():
             
             except FileNotFoundError:
             # If file doesn't exist, create it with new data
-                with open('calories_daily_target_backup.json', 'w', encoding='utf-8') as file:
+                with open('calories_daily_target_data.json', 'w', encoding='utf-8') as file:
                     json.dump(calorie_daily_target_data, file, indent=4)
                     print(f'Calorie target {calorie_daily_target} has been updated.')
             finally: 
@@ -70,19 +70,20 @@ def main():
                 #add method/function to return to menu for options
         
         case 2:
-            calories_total_data = None
+            calories_total_data = int(input('Add to today entry: '))
+            today_entry = {}
             try:
                 with open('calories_total_data.json','r',encoding='utf-8') as file:
-                    json.load(calories_total_data)
+                    today_entry = json.load(file)
                     print('calories total data read')
                     
+            except FileNotFoundError:
                 with open('calories_total_data.json', 'w', encoding='utf-8') as file:
+                    today = date.today().isoformat()
+                    today_entry = {'date':today, 'calories':[]}#dictionary variable
                     json.dump(calories_total_data, file, indent=4)
                     print('total calories data created')
                 
-            except FileNotFoundError:
-                print('oops!')
-
             finally:
                 print('xxxxxxx')#test purposes
                 #to add return to main menu or quit method 
