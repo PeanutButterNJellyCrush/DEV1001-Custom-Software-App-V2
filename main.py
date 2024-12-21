@@ -1,10 +1,13 @@
 import json
-from datetime import date
+# Implemented by https://www.phind.com/search?cache=ftty6iky2xh0d6l5sa11lwqr
+import arrow
+# Implemented by https://www.phind.com/search?cache=tcny6wsxhq1t2i7t5ph3btqg
 import typer
 
 app = typer.Typer()
 
 class FileManager:
+    @staticmethod
     def load_json(filename):
         try:
             with open(filename, 'r', encoding='utf-8') as file:
@@ -12,6 +15,7 @@ class FileManager:
         except FileNotFoundError:
             return None
 
+    @staticmethod
     def save_json(data, filename):
         with open(filename, 'w', encoding='utf-8') as file:
             json.dump(data, file, indent=4)
@@ -40,7 +44,7 @@ class CalorieTracker:
 
     def set_calorie_target(self):
         calorie_daily_target = int(typer.prompt('Set your daily target calorie: '))
-        today = date.today().isoformat()
+        today = arrow.now().isoformat()
         calorie_daily_target_data = {
             'Name': self.user_manager.user_details['Name'],
             'Calories daily': calorie_daily_target,
@@ -56,7 +60,7 @@ class CalorieTracker:
         if stored_data:
             self.today_entry = stored_data
         else:
-            today = date.today().isoformat()
+            today = arrow.now().isoformat()
             self.today_entry = {'date': today, 'calories': []}
 
         self.today_entry['calories'].append(calories_total_data)
