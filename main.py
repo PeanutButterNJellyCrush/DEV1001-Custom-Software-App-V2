@@ -81,21 +81,16 @@ def main():
             print('Add calorie entry')
             #add calories to the day & save to json file
 
-            calories_entry = (input('Enter calories you would like to add today.' ))
+            calories_entry = int(input('Enter calories you would like to add today: '))
             print(calories_entry)
             today = date.today().isoformat()
             print(today)
             
-            # calories_sum = 0 #initialise to zero?
-            # total_calories_consumed_today = sum(calories_entry, calories_sum) 
-            # calories_sum = sum(calories_entry) #sum of callories array 
-            
-            calories_list = [1, 6, 9] #store calories_entry as an array 
+            calories_list = [0] #store calories_entry as an array 
             calories_list.append(calories_entry)
             print(calories_list)
-            print(sum(calories_list))
+            total_calories_consumed_today = (sum(calories_list))
 
-            
             calories_entry_today = {
                 'Date': today,
                 'Calories to add':calories_entry, #input from user at the present moment 
