@@ -52,19 +52,10 @@ def main():
                 'Date': today
             }
             
-            calorie_daily_target = (input('Set your daily target calorie: '))
-            
             try:
-            #read & write to file
-                with open('calories_daily_target.json','r', encoding='utf-8') as file:
-                    calorie_daily_target_data = json.load(file)
-                    if 'Calories daily' in calorie_daily_target_data:
-                        print('Calories daily')
-                               
-                    else:
-                        print('No calories.')
-               
-                with open('calories_daily_target.json', 'w', encoding='utf-8') as file:
+            #write to file
+        
+                with open('calories_daily_target_data.json', 'w', encoding='utf-8') as file:
                     json.dump(calorie_daily_target_data, file, indent=4)
                     print(f'Calorie target {calorie_daily_target} for {today} has been updated!')
                     print({'Calories daily' in calorie_daily_target_data})
