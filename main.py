@@ -1,6 +1,6 @@
 import json
 from datetime import date
-
+import rich
 
 def main():
     
@@ -76,9 +76,7 @@ def main():
             finally: 
                 print('xxxxxx')
                 #add method/function to return to menu or quit 
-            
-
-            
+        
         case 2:
             print('Add calorie entry')
             #add calories to the day & save to json file
@@ -86,21 +84,27 @@ def main():
             print(calories_entry)
             today = date.today().isoformat()
             print(today)
-            
-            
+            total_calories_consumed_today = sum(calories_entry, calories_sum) 
+        
             calories_entry_today = {
-                'Date': 'date today',
-                'Calories to add':calories_entry
+                'Date': today,
+                'Calories to add':calories_entry,
+                'Total calories consumed today': calories_sum
             }
             
             try:
+                #read file, if no file, make file & add to file
                 with open('calories_entry_today.json','w', encoding='utf-8') as file:
                     json.dump(calories_entry_today, file, indent=4)
+                    
+                    if 
                 with open('calories_entry_today','r', encoding='utf-8') as file:
                     calories_entry_today = json.load(file)
                 print(calories_entry_today) 
+                print(total_calories_consumed_today)
             finally:
                 print('xxxxxxx')
+                #return to main menu or quit
             
         case 3:
             print('Help')
