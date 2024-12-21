@@ -12,7 +12,6 @@ def main():
         'Name:':user_name_input,
         'PIN':user_pin_input
     }
-    print(user_details_input)
         
     try:     
     #check if user file exists in user details   
@@ -47,34 +46,35 @@ def main():
                 'Date': today
             }
             
-            
     target_calories_set = input('Do you have target calories set? Y/N')
     if target_calories_set.upper() == 'Y':
-            try:#if there is calories set already, load and display calories 
-                with open('calories_daily_target_set.json', 'r', encoding='utf-8') as file:
+    
+                try:#if there is calories set already, load and display calories 
+                    with open('calories_daily_target_set.json', 'r', encoding='utf-8') as file:
                             calories_daily_target_set = json.load(file)
                             if 'Calories daily' in calories_daily_target_set:
                                 print({'Calories daily'})
                 except FileNotFoundError:
                         print('oops')
                 
-                elif target_calories_set.upper() == 'N' :
-                    calorie_daily_target = int(input('Set your daily target calorie: '))
-                    today = date.today().isoformat()
-                    try: #if not, create it. not sure if supposed to be in the same file name???
-                        with open('calories_daily_target_set.json', 'w', encoding= 'utf-8') as file:
+    elif target_calories_set.upper() == 'N':
+                calorie_daily_target = int(input('Set your daily target calorie: '))
+                today = date.today().isoformat()
+                try: #if not, create it. not sure if supposed to be in the same file name???
+                    with open('calories_daily_target_set.json', 'w', encoding= 'utf-8') as file:
                             json.dump(calories_daily_target_set, file, indent=4)
                             
-                        print(f'Calorie target {calorie_daily_target} for {today} has been updated!')
+                    print(f'Calorie target {calorie_daily_target} for {today} has been updated!')
 
-                    except FileNotFoundError:
+                except FileNotFoundError:
                         print('oops')
-                    finally:
+                finally:
                         print('oops')
 
-        case 2:
+        case 2:#i dont understand why this is saying indent is doesn't match
+
     print('Add calorie entry')
-                #add calories to the day & save to json file
+                        #add calories to the day & save to json file
 
     calories_entry = int(input('Enter calories you would like to add today: '))
     print(calories_entry)
@@ -93,11 +93,11 @@ def main():
                 }
     try:
                     #read file, if no file
-                with open('total_calories_consumed_today.json','r', encoding='utf-8') as file:
+            with open('total_calories_consumed_today.json','r', encoding='utf-8') as file:
                     total_calories_consumed_today = json.load(file)
                     print(f'total calories file found: {total_calories_consumed_today} ')
                 #if no file, make file and add to file   
-            except FileNotFoundError:
+                except FileNotFoundError:
                 with open('total_calories_consumed_today.json','w', encoding='utf-8') as file:
                     json.dump(total_calories_consumed_today, file, indent=4)
                     print(f'total_calories_comsumed_today file created: {total_calories_consumed_today}')
