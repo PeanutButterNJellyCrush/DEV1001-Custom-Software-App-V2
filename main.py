@@ -60,17 +60,22 @@ def main():
                     
                     while True:
                         calorie_daily_target_data['Calories daily'] += calorie_daily_target
-                
-            
+                    
+                        print({today})
+                        break
+
                 with open('calories_daily_target.json', 'w', encoding='utf-8') as file:
                     json.dump(calorie_daily_target_data, file, indent=4)
-                    print(f'Calorie target {calorie_daily_target} has been updated.')
+                    print(f'Calorie target {calorie_daily_target} has been updated!')
             
             except FileNotFoundError:
             # If file doesn't exist, create it with new data
                 with open('calories_daily_target.json', 'w', encoding='utf-8') as file:
                     json.dump(calorie_daily_target_data, file, indent=4)
                     print(f'Calorie target {calorie_daily_target} has been updated.')
+            finally: 
+                print('xxxxxx')
+                #add method/function to return to menu or quit 
             
 
             
@@ -94,11 +99,15 @@ def main():
                 with open('calories_entry_today','r', encoding='utf-8') as file:
                     calories_entry_today = json.load(file)
                 print(calories_entry_today) 
+            finally:
+                print('xxxxxxx')
             
         case 3:
             print('Help')
             print('Follow the menu instructions to track and view your calories')
             return_to_menu = ('Enter any key to return to menu')
+     
+        
         case 4:
             print('Quit')
             quit()
