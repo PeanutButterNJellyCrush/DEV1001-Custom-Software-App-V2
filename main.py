@@ -1,7 +1,11 @@
 import json
 from datetime import date
+import typer
+
+app = typer.Typer()
 
 class FileManager:
+    @staticmethod
     def load_json(filename):
         try:
             with open(filename, 'r', encoding='utf-8') as file:
@@ -9,6 +13,7 @@ class FileManager:
         except FileNotFoundError:
             return None
 
+    @staticmethod
     def save_json(data, filename):
         with open(filename, 'w', encoding='utf-8') as file:
             json.dump(data, file, indent=4)
@@ -20,13 +25,13 @@ class UserManager:
     def authenticate_user(self, username, pin):
         stored_data = FileManager.load_json('user_details.json')
         if stored_data and stored_data == {'Name': username, 'PIN': pin}:
-            print('Log-in details verified. Welcome back!')
+            typer.echo('Log-in details verified. Welcome back!')
             self.user_details = stored_data
             return True
         else:
             self.user_details = {'Name': username, 'PIN': pin}
             FileManager.save_json(self.user_details, 'user_details.json')
-            print('New log-in details saved!')
+            typer.echo('New log-in details saved!')
             return True
 
 class CalorieTracker:
@@ -36,7 +41,7 @@ class CalorieTracker:
         self.today_entry = {}
 
     def set_calorie_target(self):
-        calorie_daily_target = int(input('Set your daily target calorie: '))
+        calorie_daily_target = int(typer.prompt('Set your daily target calorie: '))
         today = date.today().isoformat()
         calorie_daily_target_data = {
             'Name': self.user_manager.user_details['Name'],
@@ -45,10 +50,10 @@ class CalorieTracker:
         }
         FileManager.save_json(calorie_daily_target_data, 'calories_daily_target_data.json')
         self.calorie_target = calorie_daily_target
-        print(f'Calorie target {calorie_daily_target} for {today} has been updated!')
+        typer.echo(f'Calorie target {calorie_daily_target} for {today} has been updated!')
 
     def add_calorie_entry(self):
-        calories_total_data = int(input('Add to today entry: '))
+        calories_total_data = int(typer.prompt('Add to today entry: '))
         stored_data = FileManager.load_json('calories_total_data.json')
         if stored_data:
             self.today_entry = stored_data
@@ -58,40 +63,44 @@ class CalorieTracker:
 
         self.today_entry['calories'].append(calories_total_data)
         FileManager.save_json(self.today_entry, 'calories_total_data.json')
-        print('calories saved')
-        print(f"Calories added today: {self.today_entry['calories']}")
+        typer.echo('calories saved')
+        typer.echo(f"Calories added today: {self.today_entry['calories']}")
         total_today = sum(self.today_entry['calories'])
-        print(f"Total calories consumed today: {total_today}")
+        typer.echo(f"Total calories consumed today: {total_today}")
 
-def main():
+@app.command()
+def login(username: str = None, pin: str = None):
+    if username is None:
+        username = typer.prompt("Enter your name")
+    if pin is None:
+        pin = typer.prompt("Enter your PIN", hide_input=True, confirmation_prompt=True)
+
     user_manager = UserManager()
-    calorie_tracker = CalorieTracker(user_manager)
-
-    user_name_input = input('Enter your name: ')
-    user_pin_input = input('Enter your PIN: ')
-
-    if user_manager.authenticate_user(user_name_input, user_pin_input):
+    if user_manager.authenticate_user(username, pin):
         while True:
-            print('\nOptions:')
-            print('1. Set calories target')
-            print('2. Add calorie entry')
-            print('3. Help')
-            print('4. Quit')
-
-            choice = int(input('Enter option: '))
-
-            if choice == 1:
+            action = typer.prompt('Choose an action (set_target/add_entry/help/quit)')
+            if action == 'set_target':
+                calorie_tracker = CalorieTracker(user_manager)
                 calorie_tracker.set_calorie_target()
-            elif choice == 2:
+            elif action == 'add_entry':
+                calorie_tracker = CalorieTracker(user_manager)
                 calorie_tracker.add_calorie_entry()
-            elif choice == 3:
-                print('Help')
-                print('Follow the menu instructions to track and view your calories')
-            elif choice == 4:
-                print('Quit')
+            elif action == 'help':
+                typer.echo('Follow the menu instructions to track and view your calories')
+            elif action == 'quit':
+                typer.echo('Quitting...')
                 break
             else:
-                print('Invalid option. Please choose a valid option.')
+                typer.echo('Invalid action. Please choose a valid action.')
+
+@app.command()
+def help():
+    typer.echo('Follow the menu instructions to track and view your calories')
+
+@app.callback(invoke_without_command=True)
+def root(ctx: typer.Context):
+    if ctx.invoked_subcommand is None:
+        login()
 
 if __name__ == "__main__":
-    main()
+    app()
