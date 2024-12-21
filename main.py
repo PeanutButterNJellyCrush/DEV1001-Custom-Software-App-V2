@@ -86,19 +86,20 @@ def main():
             today = date.today().isoformat()
             print(today)
             
-            calories_sum = 0 #initialise to zero?
-            total_calories_consumed_today = sum(calories_entry, calories_sum) 
-            calories_sum = sum(calories_entry) #sum of callories array 
+            # calories_sum = 0 #initialise to zero?
+            # total_calories_consumed_today = sum(calories_entry, calories_sum) 
+            # calories_sum = sum(calories_entry) #sum of callories array 
             
-            calories_entry = [] #store calories_entry as an array 
-            
-            
-            quit() #debugging
+            calories_list = [1, 6, 9] #store calories_entry as an array 
+            calories_list.append(calories_entry)
+            print(calories_list)
+            print(sum(calories_list))
+
             
             calories_entry_today = {
                 'Date': today,
                 'Calories to add':calories_entry, #input from user at the present moment 
-                'Total calories consumed today': total_calories_consumed_today
+                'Total calories consumed today': 'total_calories_consumed_today'
             }
             
             try:
@@ -106,7 +107,7 @@ def main():
                 with open('calories_entry_today.json','w', encoding='utf-8') as file:
                     json.dump(calories_entry_today, file, indent=4)
                     
-                    if 
+                
                 with open('calories_entry_today','r', encoding='utf-8') as file:
                     calories_entry_today = json.load(file)
                 print(calories_entry_today) 

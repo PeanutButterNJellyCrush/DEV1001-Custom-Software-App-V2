@@ -1,4 +1,9 @@
 {
-    "Date": "date today",
-    "Calories to add": "300"
+    "Date": "2024-12-21",
+    "Calories to add": [
+        1,
+        6,
+        9
+    ],
+    "Total calories consumed today": "total_calories_consumed_today"
 }
