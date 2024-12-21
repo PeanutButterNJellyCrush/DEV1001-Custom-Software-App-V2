@@ -33,11 +33,11 @@ def main():
         print('login saved') 
 
     except FileNotFoundError:
-        print('error')
+        print('File not found. Try again.')
 
 
     #main menu options
-    print('You have [calories]/ [{calorie_daily_target}]today.')
+    print('You have {calorie_daily_target} today.') #create classes and methods to pass calories_daily_target to this output display.
     print('Options:\n 1.Set calories target \n 2.Add calorie entry \n 3.Help \n 4.Quit')
             
     choice = int(input('Enter option: '))
