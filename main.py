@@ -1,6 +1,5 @@
 import json
 from datetime import date
-import rich
 
 def main():
    
