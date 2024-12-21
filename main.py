@@ -5,7 +5,6 @@ import typer
 app = typer.Typer()
 
 class FileManager:
-    @staticmethod
     def load_json(filename):
         try:
             with open(filename, 'r', encoding='utf-8') as file:
@@ -13,7 +12,6 @@ class FileManager:
         except FileNotFoundError:
             return None
 
-    @staticmethod
     def save_json(data, filename):
         with open(filename, 'w', encoding='utf-8') as file:
             json.dump(data, file, indent=4)
@@ -68,6 +66,13 @@ class CalorieTracker:
         total_today = sum(self.today_entry['calories'])
         typer.echo(f"Total calories consumed today: {total_today}")
 
+def show_menu():
+    typer.echo("\nOptions:")
+    typer.echo(" 1. Set calories target")
+    typer.echo(" 2. Add calorie entry")
+    typer.echo(" 3. Help")
+    typer.echo(" 4. Quit")
+
 @app.command()
 def login(username: str = None, pin: str = None):
     if username is None:
@@ -78,20 +83,22 @@ def login(username: str = None, pin: str = None):
     user_manager = UserManager()
     if user_manager.authenticate_user(username, pin):
         while True:
-            action = typer.prompt('Choose an action (set_target/add_entry/help/quit)')
-            if action == 'set_target':
+            show_menu()
+            choice = typer.prompt("Enter option: ")
+            
+            if choice == "1":
                 calorie_tracker = CalorieTracker(user_manager)
                 calorie_tracker.set_calorie_target()
-            elif action == 'add_entry':
+            elif choice == "2":
                 calorie_tracker = CalorieTracker(user_manager)
                 calorie_tracker.add_calorie_entry()
-            elif action == 'help':
+            elif choice == "3":
                 typer.echo('Follow the menu instructions to track and view your calories')
-            elif action == 'quit':
+            elif choice == "4":
                 typer.echo('Quitting...')
                 break
             else:
-                typer.echo('Invalid action. Please choose a valid action.')
+                typer.echo('Invalid option. Please choose a valid option.')
 
 @app.command()
 def help():
