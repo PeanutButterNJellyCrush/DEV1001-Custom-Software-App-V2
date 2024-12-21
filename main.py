@@ -42,7 +42,8 @@ def main():
         case 1:
 
             
-                target_calories_set = input('Do you have target calories set? Y/N')
+                target_calories_set = str(input('Do you have target calories set? Y/N: '))
+               
                 if target_calories_set.upper() == 'Y':
     
                     try:#if there is calories set already, load and display calories 
@@ -54,14 +55,15 @@ def main():
                         print('oops')
                 
                 elif target_calories_set.upper() == 'N':
+                    calorie_daily_target = int(input('Set your daily target calorie: '))
+                    today = date.today().isoformat()
                     
-                    calorie_daily_target = {
+                    calories_daily_target_set = {
                     'Name':user_name_input,
                     'Calories daily': calorie_daily_target,
                     'Date': today
                 }
-                    calorie_daily_target = int(input('Set your daily target calorie: '))
-                    today = date.today().isoformat()
+
                     
                     try: #if not, create it. not sure if supposed to be in the same file name???
                         with open('calories_daily_target_set.json', 'w', encoding= 'utf-8') as file:
