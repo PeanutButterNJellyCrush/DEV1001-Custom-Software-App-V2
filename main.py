@@ -42,7 +42,7 @@ def main():
     match choice:
         case 1:
             #set calories target & save to json file
-            calorie_daily_target = (input('Set your daily target calorie: '))
+            calorie_daily_target = int(input('Set your daily target calorie: '))
             today = date.today().isoformat()
             
             calorie_daily_target_data = {
@@ -50,17 +50,23 @@ def main():
                 'Calories daily': calorie_daily_target,
                 'Date': today
             }
+            
+            calorie_daily_target = (input('Set your daily target calorie: '))
+            
             try:
             #read & write to file
                 with open('calories_daily_target.json','r', encoding='utf-8') as file:
                     calorie_daily_target_data = json.load(file)
-                                
-                    calorie_daily_target_data['Calories daily'] += calorie_daily_target
-                    print({today})
-                    
+                    if 'Calories daily' in calorie_daily_target_data:
+                        print('Calories daily')
+                               
+                    else:
+                        print('No calories.')
+               
                 with open('calories_daily_target.json', 'w', encoding='utf-8') as file:
                     json.dump(calorie_daily_target_data, file, indent=4)
-                    print(f'Calorie target {calorie_daily_target} has been updated!')
+                    print(f'Calorie target {calorie_daily_target} for {today} has been updated!')
+                    print({'Calories daily' in calorie_daily_target_data})
             
             except FileNotFoundError:
             # If file doesn't exist, create it with new data
@@ -68,7 +74,7 @@ def main():
                     json.dump(calorie_daily_target_data, file, indent=4)
                     print(f'Calorie target {calorie_daily_target} has been updated.')
             finally: 
-                print('xxxxxx')
+                print('return to main menu')
                 #add method/function to return to menu or quit 
         
         case 2:
@@ -115,7 +121,6 @@ def main():
         
         case 4:
             print('Quit')
-            quit()
             
             
 if __name__ == "__main__":
