@@ -7,33 +7,33 @@ def main():
     user_name_input = (input('Enter your name: ' ))
     user_pin_input = (input('Enter PIN: ' ))
     
-    #Dictionary for user_name & user_pin
-    user_credentials_input = {
-        'Name:':user_name_input,
-        'PIN':user_pin_input
-    }
-    print(user_credentials_input)
-    
-    # user_credentials = {
-    #     'Name:':'bonnie',
-    #     'PIN':'456'
-    # } debugging purposes
-        
-    try:     
-    #check if user file exists      
-        with open('user_credentials.json','r', encoding='utf-8') as file:
-            user_credentials = json.load(file)
-            
-        if user_credentials == user_credentials_input:
-            print('login details present')
+user_name_input = (input('Enter your name: ' ))
+user_pin_input = (input('Enter PIN: ' ))
 
-        else:
-            with open('user_credentials.json','w', encoding='utf-8') as file:
-                json.dump(user_credentials_input, file, indent=4)   
+#Dictionary for user_name & user_pin
+user_details_input = {
+    'Name:':user_name_input,
+    'PIN':user_pin_input
+}
+print(user_details_input)
+    
+try:     
+#check if user file exists in user details   
+    with open('user_details.json','r', encoding='utf-8') as file:
+        user_details_data= json.load(file)#read as user_dtails_data for python
+        print(user_details_data)#print
+        
+        if user_details_data == user_details_input:
+            print('login details present')#check if the same details present
+
+    with open('user_details.json','w', encoding='utf-8') as file:#open json file and write input details to it
+            json.dump(user_details_input, file, indent=4)   
         print('login saved') 
 
-    except FileNotFoundError:
-        print('File not found. Try again.')
+except FileNotFoundError:#if the file is not found 
+    with open('user_details.json','w', encoding='utf-8') as file:#open json file and write input details to it
+        json.dump(user_details_input, file, indent=4)   
+        print('login saved finally')
 
 
     #main menu options
