@@ -3,37 +3,34 @@ from datetime import date
 import rich
 
 def main():
-    
+   
     user_name_input = (input('Enter your name: ' ))
-    user_pin_input = (input('Enter PIN: ' ))
-    
-user_name_input = (input('Enter your name: ' ))
-user_pin_input = (input('Enter PIN: ' ))
+    user_pin_input = (input('Enter your PIN: ' ))
 
-#Dictionary for user_name & user_pin
-user_details_input = {
-    'Name:':user_name_input,
-    'PIN':user_pin_input
-}
-print(user_details_input)
-    
-try:     
-#check if user file exists in user details   
-    with open('user_details.json','r', encoding='utf-8') as file:
-        user_details_data= json.load(file)#read as user_dtails_data for python
-        print(user_details_data)#print
+    #Dictionary for user_name & user_pin
+    user_details_input = {
+        'Name:':user_name_input,
+        'PIN':user_pin_input
+    }
+    print(user_details_input)
         
-        if user_details_data == user_details_input:
-            print('login details present')#check if the same details present
+    try:     
+    #check if user file exists in user details   
+        with open('user_details.json','r', encoding='utf-8') as file:
+            user_details_data= json.load(file)#read as user_dtails_data for python
+            print(user_details_data)#print
+            
+            if user_details_data == user_details_input:
+                print('Log-in details verified. Welcome back!')#check if the same details present
 
-    with open('user_details.json','w', encoding='utf-8') as file:#open json file and write input details to it
+        with open('user_details.json','w', encoding='utf-8') as file:#open json file and write input details to it
+                json.dump(user_details_input, file, indent=4)   
+                print('New log-in details saved!') 
+
+    except FileNotFoundError:#if the file is not found 
+        with open('user_details.json','w', encoding='utf-8') as file:#open json file and write input details to it
             json.dump(user_details_input, file, indent=4)   
-        print('login saved') 
-
-except FileNotFoundError:#if the file is not found 
-    with open('user_details.json','w', encoding='utf-8') as file:#open json file and write input details to it
-        json.dump(user_details_input, file, indent=4)   
-        print('login saved finally')
+            print('Login saved finally')
 
 
     #main menu options
