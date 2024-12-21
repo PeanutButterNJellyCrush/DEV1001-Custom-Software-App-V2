@@ -70,36 +70,36 @@ def main():
                 #add method/function to return to menu for options
         
         case 2:
-            print('Add calorie entry')
-            #add calories to the day & save to json file
-
-            calories_entry = int(input('Enter calories you would like to add to today: '))
-            today = date.today().isoformat()
-            
-            calories_list = [0] #store calories_entry as an array 
-            calories_list.append(calories_entry)
-            print(calories_list)
-            total_calories_consumed_today = sum([calories_entry])
-            (sum(calories_list))
-
-            calories_entry_today = {
-                'Date': today,
-                'Calories to add':calories_entry, #input from user at the present moment 
-                'Total calories consumed today': total_calories_consumed_today
-            }
+            calories_total_data = None
             try:
-                with open('total_calories_consumed_today.json', 'w', encoding='utf-8') as file:
-                    json.dump(total_calories_consumed_today, file, indent=4)
-                    print(f'total_calories_comsumed_today file created: {total_calories_consumed_today}')      
-                    print(f'You have successfully added: {calories_entry_today} to your account today.') 
-                    print('You have consumed x amount of calories today')
-
+                with open('calories_total_data.json','r',encoding='utf-8') as file:
+                    json.load(calories_total_data)
+                    print('calories total data read')
+                    
+                with open('calories_total_data.json', 'w', encoding='utf-8') as file:
+                    json.dump(calories_total_data, file, indent=4)
+                    print('total calories data created')
+                
             except FileNotFoundError:
                 print('oops!')
 
             finally:
                 print('xxxxxxx')#test purposes
                 #to add return to main menu or quit method 
+        
+            # calories_entry = int(input('add calories to today: '))
+            today = date.today().isoformat()
+            #calories_total_data json file
+            
+            today_entry = {'date':today, 'calories':[]}#dictionary variable
+            calories_total_data.append(today_entry)#appended to calories total data
+            
+            with open('calories_total_data.json', 'w', encoding='utf-8') as file:
+                json.dump(calories_total_data, file, indent=4)
+                print('calories saved')
+                
+            print(f"Calories added today: {today_entry['Calories']}")
+            print(f"Total calories consumed today: {today_entry['Total calories consumed today']}")
             
         case 3:
             print('Help')
