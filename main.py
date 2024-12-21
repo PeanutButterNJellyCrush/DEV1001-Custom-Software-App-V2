@@ -94,22 +94,24 @@ def main():
             calories_entry_today = {
                 'Date': today,
                 'Calories to add':calories_entry, #input from user at the present moment 
-                'Total calories consumed today': 'total_calories_consumed_today'
+                'Total calories consumed today': total_calories_consumed_today
             }
-            
             try:
-                #read file, if no file, make file & add to file
-                with open('calories_entry_today.json','w', encoding='utf-8') as file:
-                    json.dump(calories_entry_today, file, indent=4)
+                #read file, if no file
+                with open('total_calories_consumed_today','r', encoding='utf-8') as file:
+                    total_calories_consumed_today = json.load(file)
+                    print(f'total calories file found: {total_calories_consumed_today} ')
+                #if no file, make file and add to file   
+            except FileNotFoundError:
+                with open('total_calories_consumed_today.json','w', encoding='utf-8') as file:
+                    json.dump(total_calories_consumed_today, file, indent=4)
+                    print(f'total_calories_comsumed_today file created: {total_calories_consumed_today}')
                     
-                
-                with open('calories_entry_today','r', encoding='utf-8') as file:
-                    calories_entry_today = json.load(file)
-                print(calories_entry_today) 
-                print(total_calories_consumed_today)
+                print(f'You have successfully added: {calories_entry_today} to your account today.') 
+                print(f'Total calories consumed today: {total_calories_consumed_today}')
             finally:
-                print('xxxxxxx')
-                #return to main menu or quit
+                print('xxxxxxx')#test purposes
+                #to add return to main menu or quit method 
             
         case 3:
             print('Help')
