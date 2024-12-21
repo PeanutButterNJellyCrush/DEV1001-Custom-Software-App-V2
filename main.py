@@ -31,15 +31,13 @@ def main():
             with open('user_credentials.json','w', encoding='utf-8') as file:
                 json.dump(user_credentials_input, file, indent=4)   
         print('login saved') 
-            
-    #if not, create one 
+
     except FileNotFoundError:
         print('error')
 
 
     #main menu options
     print('You have [calories]/ [{calorie_daily_target}]today.')
-    print('You have [calories]/[target] this week')
     print('Options:\n 1.Set calories target \n 2.Add calorie entry \n 3.Help \n 4.Quit')
             
     choice = int(input('Enter option: '))
@@ -56,17 +54,20 @@ def main():
                 'Date': today
             }
             try:
-            #write to file
+            #read & write to file
                 with open('calories_daily_target.json','r', encoding='utf-8') as file:
                     calorie_daily_target_data = json.load(file)
-                    calorie_daily_target_data.append(calorie_daily_target)
+                    
+                    while True:
+                        calorie_daily_target_data['Calories daily'] += calorie_daily_target
+                
             
                 with open('calories_daily_target.json', 'w', encoding='utf-8') as file:
                     json.dump(calorie_daily_target_data, file, indent=4)
                     print(f'Calorie target {calorie_daily_target} has been updated.')
             
             except FileNotFoundError:
-        # If file doesn't exist, create it with new data
+            # If file doesn't exist, create it with new data
                 with open('calories_daily_target.json', 'w', encoding='utf-8') as file:
                     json.dump(calorie_daily_target_data, file, indent=4)
                     print(f'Calorie target {calorie_daily_target} has been updated.')
@@ -80,15 +81,20 @@ def main():
             print(calories_entry)
             today = date.today().isoformat()
             print(today)
+            
+            
             calories_entry_today = {
                 'Date': 'date today',
                 'Calories to add':calories_entry
             }
-            with open('calories_entry_today','w', encoding='utf-8') as file:
-                json.dump(calories_entry_today, file, indent=4)
-            with open('calories_entry_today','r', encoding='utf-8') as file:
-                calories_entry_today = json.load(file)
-                print(calories_entry_today)
+            
+            try:
+                with open('calories_entry_today.json','w', encoding='utf-8') as file:
+                    json.dump(calories_entry_today, file, indent=4)
+                with open('calories_entry_today','r', encoding='utf-8') as file:
+                    calories_entry_today = json.load(file)
+                print(calories_entry_today) 
+            
         case 3:
             print('Help')
             print('Follow the menu instructions to track and view your calories')
