@@ -89,18 +89,17 @@ def main():
                 #to add return to main menu or quit method 
         
             # calories_entry = int(input('add calories to today: '))
-            today = date.today().isoformat()
             #calories_total_data json file
             
-            today_entry = {'date':today, 'calories':[]}#dictionary variable
-            calories_total_data.append(today_entry)#appended to calories total data
+            today_entry['calories'].append(calories_total_data)  # appended to calories total data
             
             with open('calories_total_data.json', 'w', encoding='utf-8') as file:
-                json.dump(calories_total_data, file, indent=4)
+                json.dump(today_entry, file, indent=4)
                 print('calories saved')
                 
-            print(f"Calories added today: {today_entry['Calories']}")
-            print(f"Total calories consumed today: {today_entry['Total calories consumed today']}")
+            print(f"Calories added today: {today_entry['calories']}")
+            total_today = sum(today_entry['calories'])
+            print(f"Total calories consumed today: {total_today}")
             
         case 3:
             print('Help')
