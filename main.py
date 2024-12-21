@@ -22,10 +22,11 @@ def main():
             
             if user_details_data == user_details_input:
                 print('Log-in details verified. Welcome back!')#check if the same details present
-
-        with open('user_details.json','w', encoding='utf-8') as file:#open json file and write input details to it
-                json.dump(user_details_input, file, indent=4)   
-                print('New log-in details saved!') 
+            
+            else:
+                with open('user_details.json','w', encoding='utf-8') as file:#open json file and write input details to it
+                    json.dump(user_details_input, file, indent=4)   
+                    print('New log-in details saved!') 
 
     except FileNotFoundError:#if the file is not found 
         with open('user_details.json','w', encoding='utf-8') as file:#open json file and write input details to it
