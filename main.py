@@ -45,16 +45,17 @@ def main():
                 target_calories_set = str(input('Do you have target calories set? Y/N: '))
                
                 if target_calories_set.upper() == 'Y':
-    
+
                     try:#if there is calories set already, load and display calories 
                         with open('calories_daily_target_set.json', 'r', encoding='utf-8') as file:
                             calories_daily_target_set = json.load(file)
                             if 'Calories daily' in calories_daily_target_set:
-                                print({'Calories daily'})
+                                print({calories_daily_target_set})
                     except FileNotFoundError:
                         print('oops')
                 
                 elif target_calories_set.upper() == 'N':
+                    
                     calorie_daily_target = int(input('Set your daily target calorie: '))
                     today = date.today().isoformat()
                     
@@ -64,8 +65,7 @@ def main():
                     'Date': today
                 }
 
-                    
-                    try: #if not, create it. not sure if supposed to be in the same file name???
+                    try: #if not, create file
                         with open('calories_daily_target_set.json', 'w', encoding= 'utf-8') as file:
                             json.dump(calories_daily_target_set, file, indent=4)
                             
@@ -74,9 +74,9 @@ def main():
                     except FileNotFoundError:
                         print('oops')
                     finally:
-                        print('oops')
+                        print('Have a great day!')
 
-        case 2:#i dont understand why this is saying indent is doesn't match
+        case 2:
 
             print('Add calorie entry')
                         #add calories to the day & save to json file
