@@ -1,128 +1,166 @@
 import json
 from datetime import date
 import rich
+from typing import List, Dict
+import typer
 
-def main():
-   
-    user_name_input = (input('Enter your name: ' ))
-    user_pin_input = (input('Enter your PIN: ' ))
+app = typer.Typer()
 
-    #Dictionary for user_name & user_pin
-    user_details_input = {
-        'Name:':user_name_input,
-        'PIN':user_pin_input
-    }
-    print(user_details_input)
-        
-    try:     
-    #check if user file exists in user details   
-        with open('user_details.json','r', encoding='utf-8') as file:
-            user_details_data= json.load(file)#read as user_dtails_data for python
-            print(user_details_data)#print
-            
-            if user_details_data == user_details_input:
-                print('Log-in details verified. Welcome back!')#check if the same details present
-            
-            else:
-                with open('user_details.json','w', encoding='utf-8') as file:#open json file and write input details to it
-                    json.dump(user_details_input, file, indent=4)   
-                    print('New log-in details saved!') 
+class User:
+    def __init__(self, name: str, pin: str):
+        self.name = name
+        self.pin = pin
 
-    except FileNotFoundError:#if the file is not found 
-        with open('user_details.json','w', encoding='utf-8') as file:#open json file and write input details to it
-            json.dump(user_details_input, file, indent=4)   
-            print('Login saved finally')
+class CalorieTracker:
+    def __init__(self, user: User):
+        self.user = user
+        self.calorie_daily_target = 2000  # Default value
+        self.entries: List[Dict] = []
 
+    def set_calorie_target(self):
+        while True:
+            try:
+                self.calorie_daily_target = int(typer.prompt("Set your daily calorie target: "))
+                if self.calorie_daily_target <= 0:
+                    raise ValueError
+                self.save_calorie_target()
+                typer.echo(f"Daily calorie target set to {self.calorie_daily_target}.", color="green")
+                break
+            except ValueError:
+                typer.echo("Please enter a positive integer.", color="red")
 
-    #main menu options
-    print('You have {calorie_daily_target} today.') #create classes and methods to pass calories_daily_target to this output display.
-    print('Options:\n 1.Set calories target \n 2.Add calorie entry \n 3.Help \n 4.Quit')
-            
-    choice = int(input('Enter option: '))
+    def add_calorie_entry(self):
+        while True:
+            try:
+                today = date.today().isoformat()
+                calories = int(typer.prompt("Add to today's entry: "))
+                if calories < 0:
+                    raise ValueError
+                self.entries.append({"date": today, "calories": calories})
+                self.save_entries()
+                typer.echo(f"Entry added: {calories} calories on {today}", color="green")
+                break
+            except ValueError:
+                typer.echo("Please enter a non-negative integer.", color="red")
+
+    def view_entries(self):
+        if not self.entries:
+            typer.echo("No entries yet.", color="yellow")
+            return
+
+        typer.echo("\nCalorie Entries:", color="cyan")
+        for entry in self.entries:
+            typer.echo(f"{entry['date']}: {entry['calories']} calories")
+        remaining_calories = self.get_remaining_calories()
+        typer.echo(f"\nRemaining calories: {remaining_calories}", color="magenta")
+
+    def get_remaining_calories(self):
+        consumed_calories = sum(entry["calories"] for entry in self.entries)
+        return self.calorie_daily_target - consumed_calories
+
+    def save_calorie_target(self):
+        data = {
+            "name": self.user.name,
+            "calorie_daily_target": self.calorie_daily_target,
+            "date": date.today().isoformat()
+        }
+        try:
+            with open("calorie_target.json", "w") as f:
+                json.dump(data, f, indent=4)
+        except IOError as e:
+            typer.echo(f"Error saving calorie target: {e}", color="red")
+
+    def save_entries(self):
+        data = {
+            "name": self.user.name,
+            "entries": self.entries
+        }
+        try:
+            with open("calorie_entries.json", "w") as f:
+                json.dump(data, f, indent=4)
+        except IOError as e:
+            typer.echo(f"Error saving entries: {e}", color="red")
+
+    @classmethod
+    def load_calorie_target(cls, user: User):
+        try:
+            with open("calorie_target.json", "r") as f:
+                data = json.load(f)
+                if data["name"] == user.name:
+                    return data["calorie_daily_target"]
+        except (FileNotFoundError, json.JSONDecodeError):
+            return 2000
+
+    @classmethod
+    def load_entries(cls, user: User):
+        try:
+            with open("calorie_entries.json", "r") as f:
+                data = json.load(f)
+                if data["name"] == user.name:
+                    return data["entries"]
+        except (FileNotFoundError, json.JSONDecodeError):
+            return []
+
+@app.command()
+def authenticate_user():
+    name = typer.prompt("Enter your name")
+    pin = typer.prompt("Enter your PIN", hide_input=True, confirmation_prompt=True)
+    user = User(name, pin)
+    tracker = CalorieTracker(user)
+    tracker.calorie_daily_target = CalorieTracker.load_calorie_target(user)
+    tracker.entries = CalorieTracker.load_entries(user)
+    return tracker
+
+@app.command()
+def display_menu(tracker: CalorieTracker):
+    while True:
+        choice = typer.prompt(
+            "\nChoose an option:\n"
+            "1. Set calorie target\n"
+            "2. Add calorie entry\n"
+            "3. View entries\n"
+            "4. Help\n"
+            "5. Quit",
+            show_choices=False
+        )
+        if choice == "1":
+            tracker.set_calorie_target()
+        elif choice == "2":
+            tracker.add_calorie_entry()
+        elif choice == "3":
+            tracker.view_entries()
+        elif choice == "4":
+            display_help()
+        elif choice == "5":
+            typer.echo("Goodbye!", color="green")
+            break
+        else:
+            typer.echo("Invalid choice. Please choose a valid option.", color="red")
+
+@app.command()
+def display_help():
+    help_text = """
+    Calorie Tracker Help
+
+    Welcome to the Calorie Tracker app! This tool helps you monitor your daily calorie intake.
+
+    How to Use:
+    1. Set your daily calorie target
+    2. Add calorie entries throughout the day
+    3. View your entries and remaining calories
+
+    Troubleshooting:
+    - If entries aren't saving, check file permissions
+    - For incorrect calculations, verify input values
     
-    match choice:
-        case 1:
-            #set calories target & save to json file
-            calorie_daily_target = int(input('Set your daily target calorie: '))
-            today = date.today().isoformat()
-            
-            calorie_daily_target_data = {
-                'Name':user_name_input,
-                'Calories daily': calorie_daily_target,
-                'Date': today
-            }
-            
-            try:
-            #write to file
-        
-                with open('calories_daily_target_data.json', 'w', encoding='utf-8') as file:
-                    json.dump(calorie_daily_target_data, file, indent=4)
-                    print(f'Calorie target {calorie_daily_target} for {today} has been updated!')
-                    print({'Calories daily' in calorie_daily_target_data})
-            
-            except FileNotFoundError:
-            # If file doesn't exist, create it with new data
-                with open('calories_daily_target_data.json', 'w', encoding='utf-8') as file:
-                    json.dump(calorie_daily_target_data, file, indent=4)
-                    print(f'Calorie target {calorie_daily_target} has been updated.')
-            finally: 
-                print('return to main menu')
-                #add method/function to return to menu for options
-        
-        case 2:
-            calories_daily_target = 2000 #would like to change this to inherite from case 1 
-            data = {
-                'daily target':calories_daily_target,
-                'entry':[]
-            }
+    """
+    typer.echo(help_text)
+    typer.confirm("Press Enter to return to the main menu...", default=True)
 
-            try:
+@app.command()
+def main():
+    tracker = authenticate_user()
+    display_menu(tracker)
 
-                with open('calories_entry.json','r',encoding='utf-8') as file:
-                    data = json.load(file)
-                    print('entry has been loaded')
-
-            except FileNotFoundError:
-            # If file doesn't exist, create it with new data
-                with open('calories_entry.json','w',encoding='utf-8') as file:
-                    json.dump(data, file, indent=4)
-                    print('entry has been created')
-
-            remaining_calories = calories_daily_target #to minus from
-
-            today = date.today().isoformat() #today date
-            calories_entry = int(input('Add to today entry: '))
-            print(calories_entry,today)
-            
-            data['entry'].append({
-                'date': today,
-                'calories': calories_entry
-            })
-            remaining_calories -= calories_entry
-
-            print(f'{remaining_calories} for the day.')
-            print(remaining_calories)
-            
-            with open('calories_entry.json','w',encoding='utf-8') as file:
-                json.dump(data,file)
-                print('entry has been saved')
-            
-        case 3:
-            print('Help')
-            print('Follow the menu instructions to track and view your calories')
-            #to do return_to_menu = ('Enter any key to return to menu')
-            
-            help_text = """
-            HELP
-            
-            """
-          
-     
-        
-        case 4:
-            def quit_calorie_app():
-            print('Quit')
-            
-            
 if __name__ == "__main__":
-    main()
+    app()
