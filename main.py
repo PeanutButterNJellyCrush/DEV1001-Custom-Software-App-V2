@@ -70,29 +70,33 @@ def main():
                 #add method/function to return to menu for options
         
         case 2:
-            today = date.today().isoformat()#today date
-            calories_entry = int(input('Add to today entry: '))
-            
-            try:
-                with open('calories_total_data.json','r',encoding='utf-8') as file:
-                    calories_data = json.load(file)#assign name to file when loads
-                    
-            except FileNotFoundError:
-                calories_data = {'calories':[].append(calories_entry)}#assigning dictionary to variable
-                print(calories_data)
-                
-                
-                
-                
-                today_entry = {'date':today, 'calories':[]}#dictionary variable
-                calories_data.append(today_entry)#appended to calories total data
-                today_entry['calories'].append(calories_data)  # appended to calories total data
-                calories_data = {'Calorie entry':[]}  
-             
-            with open('calories_total_data.json', 'w', encoding='utf-8') as file:
-                    json.dump(calories_data, file, indent=4)
-                    print(calories_data)
+            calories_daily_target = 2000#would like to change this to inherite from case 1 
+            calories_entry_data = []#put into list
+            remaining_calories = calories_daily_target #to minus from
 
+            while True:
+                today = date.today().isoformat()#today date
+                calories_entry = int(input('Add to today entry: '))
+                print(calories_entry,today)
+                
+                calories_entry_data.append({
+                    'date': today,
+                    'calories': calories_entry
+                })
+                remaining_calories -= calories_entry
+                    #calorie entry is appended to data
+                print(f'{remaining_calories} for the day.')
+                print(remaining_calories)
+                
+                data = {
+                    'daily target':calories_daily_target,
+                    'entry':calories_entry_data
+                }
+                
+                with open('calories_entry.json','w',encoding='utf-8') as file:
+                    json.dump(data,file)
+                    print('entry has been saved')
+                    break
             
         case 3:
             print('Help')
