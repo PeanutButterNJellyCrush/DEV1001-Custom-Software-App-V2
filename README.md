@@ -12,37 +12,23 @@ The purpose of this project is to utilise and incorporate learnings from program
     - read friles and write to files
     - request data from API and display output
 
-## Features and functionalities of the app
-## Core features
+### Libaries/API: json, Datetime, Rich
 
-## Design 
-## Design command-line-interface layout
-## Plan data structure for storing food entry and calorie dat
-Libaries/API
-    Panda: data manipulation and storage
-    Click: building command-line interface
-    Tabulate: displaying data in tabular format
-    Datetime: for handling date and time operations
-    NumPy: calculations
-    Riche: emoji
-    matplotlib.pylot
 # Design flow of application 
+    The simple CLI application displays and runs through options until user selects to quit.
 
-## Development
-# Feature 
+# Features 
     Feature 1: Implement the ability to set a calorie target.
         Create a function to set and store the target.
-    Feature 2: Implement CRUD operations for food entries.
-        Create functions to add, read, update, and delete food entries.
-    Feature 3: Implement weekly calorie summary.
-        Create a function to calculate and display total calories consumed in a week.
-    Feature 4: Implement calorie comparison.
-        Create a function to compare current calorie intake with the target.
+    Feature 2: Implement the ability to add calorie entries throut the day.
+        Create functions to add, read and update user entries.
+    Feature 3: Implement the ability to view calories remaining for the day.
+        Create function to calculate and display total calories.
+
     Ensure error handling and input validation are in place.
 
 ## Documentation
 (Python Chefkoch)[https://pypi.org/project/python-chefkoch/#description]
 
-# For users and developers
-Write a user guide / help file for users to understand how to use the app.
-Provide installation and setup instructions.
+## For users 
+Write a user help section for users to understand how to use the app.
