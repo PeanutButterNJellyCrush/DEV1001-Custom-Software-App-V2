@@ -13,6 +13,7 @@ The purpose of this project is to utilise and incorporate learnings from program
     - request data from API and display output
 
 ### Libaries/API: json, Datetime, Rich
+-     python libraries were used to keep the project clean.
 
 # Design flow of application 
     The simple CLI application displays and runs through options until user selects to quit.
