@@ -1,10 +1,19 @@
 import json
 from datetime import date
 import rich
-from typing import List, Dict
-import typer
+from rich import print
+from rich.console import Console
+from rich.theme import Theme
 
-app = typer.Typer()
+
+from typing import List, Dict
+
+custom_theme = Theme({
+    "info": "magenta",
+    "warning": "yellow",
+    "danger": "bold red"
+})
+console = Console(theme=custom_theme)
 
 class User:
     def __init__(self, name: str, pin: str):
@@ -20,39 +29,39 @@ class CalorieTracker:
     def set_calorie_target(self):
         while True:
             try:
-                self.calorie_daily_target = int(typer.prompt("Set your daily calorie target: "))
+                self.calorie_daily_target = int(input("Set your daily calorie target: "))
                 if self.calorie_daily_target <= 0:
                     raise ValueError
                 self.save_calorie_target()
-                typer.echo(f"Daily calorie target set to {self.calorie_daily_target}.", color="green")
+                print(f"Daily calorie target set to {self.calorie_daily_target}.")
                 break
             except ValueError:
-                typer.echo("Please enter a positive integer.", color="red")
+                console.print("Please enter a valid number.", style="warning")
 
     def add_calorie_entry(self):
         while True:
             try:
                 today = date.today().isoformat()
-                calories = int(typer.prompt("Add to today's entry: "))
+                calories = int(input("Add to today's entry: "))
                 if calories < 0:
                     raise ValueError
                 self.entries.append({"date": today, "calories": calories})
                 self.save_entries()
-                typer.echo(f"Entry added: {calories} calories on {today}", color="green")
+                print(f"Entry added: {calories} calories on {today}")
                 break
             except ValueError:
-                typer.echo("Please enter a non-negative integer.", color="red")
+                console.print("Please enter a valid number.", style="warning")
 
     def view_entries(self):
         if not self.entries:
-            typer.echo("No entries yet.", color="yellow")
+            print("No entries yet.")
             return
 
-        typer.echo("\nCalorie Entries:", color="cyan")
+        print("\nCalorie Entries:")
         for entry in self.entries:
-            typer.echo(f"{entry['date']}: {entry['calories']} calories")
+            print(f"{entry['date']}: {entry['calories']} calories")
         remaining_calories = self.get_remaining_calories()
-        typer.echo(f"\nRemaining calories: {remaining_calories}", color="magenta")
+        print(f"\nRemaining calories: {remaining_calories}")
 
     def get_remaining_calories(self):
         consumed_calories = sum(entry["calories"] for entry in self.entries)
@@ -65,10 +74,10 @@ class CalorieTracker:
             "date": date.today().isoformat()
         }
         try:
-            with open("calorie_target.json", "w") as f:
+            with open("calorie_target.json", "w", encoding="utf-8") as f:
                 json.dump(data, f, indent=4)
         except IOError as e:
-            typer.echo(f"Error saving calorie target: {e}", color="red")
+            print(f"Error saving calorie target: {e}")
 
     def save_entries(self):
         data = {
@@ -76,15 +85,15 @@ class CalorieTracker:
             "entries": self.entries
         }
         try:
-            with open("calorie_entries.json", "w") as f:
+            with open("calorie_entries.json", "w", encoding="utf-8") as f:
                 json.dump(data, f, indent=4)
         except IOError as e:
-            typer.echo(f"Error saving entries: {e}", color="red")
+            console.print(f"Error saving entries: {e}", style="danger")
 
     @classmethod
     def load_calorie_target(cls, user: User):
         try:
-            with open("calorie_target.json", "r") as f:
+            with open("calorie_target.json", "r", encoding="utf-8") as f:
                 data = json.load(f)
                 if data["name"] == user.name:
                     return data["calorie_daily_target"]
@@ -94,35 +103,33 @@ class CalorieTracker:
     @classmethod
     def load_entries(cls, user: User):
         try:
-            with open("calorie_entries.json", "r") as f:
+            with open("calorie_entries.json", "r", encoding="utf-8") as f:
                 data = json.load(f)
                 if data["name"] == user.name:
                     return data["entries"]
         except (FileNotFoundError, json.JSONDecodeError):
             return []
 
-@app.command()
-def authenticate_user():
-    name = typer.prompt("Enter your name")
-    pin = typer.prompt("Enter your PIN", hide_input=True, confirmation_prompt=True)
+def verify_user():
+    name = input("Enter your name: ")
+    pin = input("Enter your PIN: ")
     user = User(name, pin)
     tracker = CalorieTracker(user)
     tracker.calorie_daily_target = CalorieTracker.load_calorie_target(user)
     tracker.entries = CalorieTracker.load_entries(user)
     return tracker
 
-@app.command()
 def display_menu(tracker: CalorieTracker):
     while True:
-        choice = typer.prompt(
-            "\nChoose an option:\n"
-            "1. Set calorie target\n"
-            "2. Add calorie entry\n"
-            "3. View entries\n"
-            "4. Help\n"
-            "5. Quit",
-            show_choices=False
-        )
+        print("\nChoose an option:")
+        print("1. Set calorie target")
+        print("2. Add calorie entry")
+        print("3. View entries & remaining calories")
+        print("4. Help")
+        print("5. Quit")
+        
+        choice = input("Enter your choice: ")
+        
         if choice == "1":
             tracker.set_calorie_target()
         elif choice == "2":
@@ -132,12 +139,11 @@ def display_menu(tracker: CalorieTracker):
         elif choice == "4":
             display_help()
         elif choice == "5":
-            typer.echo("Goodbye!", color="green")
+            console.print("Thank you for using the app, have a great day!", style="info")
             break
         else:
-            typer.echo("Invalid choice. Please choose a valid option.", color="red")
+            print("Invalid choice. Please try again.")
 
-@app.command()
 def display_help():
     help_text = """
     Calorie Tracker Help
@@ -149,18 +155,19 @@ def display_help():
     2. Add calorie entries throughout the day
     3. View your entries and remaining calories
 
-    Troubleshooting:
-    - If entries aren't saving, check file permissions
-    - For incorrect calculations, verify input values
-    
-    """
-    typer.echo(help_text)
-    typer.confirm("Press Enter to return to the main menu...", default=True)
+    Tips for Effective Tracking:
+    - Aim for consistency in your logging habits
+    - For incorrect calculations, check if you have entered the correct numbers in the correct format.
 
-@app.command()
+    Need More Help?
+    Contact us at support@calorietracker.com
+    """
+    print(help_text)
+    input("Press Enter to return to the main menu.")
+
 def main():
-    tracker = authenticate_user()
+    tracker = verify_user()
     display_menu(tracker)
 
 if __name__ == "__main__":
-    app()
+    main()
