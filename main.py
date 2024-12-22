@@ -9,6 +9,7 @@ from rich.theme import Theme
 from typing import List, Dict
 
 custom_theme = Theme({
+    "menu": "cyan",
     "info": "magenta",
     "warning": "yellow",
     "danger": "bold red"
@@ -121,12 +122,12 @@ def verify_user():
 
 def display_menu(tracker: CalorieTracker):
     while True:
-        print("\nChoose an option:")
-        print("1. Set calorie target")
-        print("2. Add calorie entry")
-        print("3. View entries & remaining calories")
-        print("4. Help")
-        print("5. Quit")
+        console.print("\nChoose an option:")
+        console.print("1. Set calorie target", style="menu")
+        console.print("2. Add calorie entry", style="menu")
+        console.print("3. View entries & remaining calories", style="menu")
+        console.print("4. Help", style="menu")
+        console.print("5. Quit", style="info")
         
         choice = input("Enter your choice: ")
         
