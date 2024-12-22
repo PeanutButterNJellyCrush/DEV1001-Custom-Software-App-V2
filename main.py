@@ -62,7 +62,7 @@ def main():
             
             except FileNotFoundError:
             # If file doesn't exist, create it with new data
-                with open('calories_daily_target_backup.json', 'w', encoding='utf-8') as file:
+                with open('calories_daily_target_data.json', 'w', encoding='utf-8') as file:
                     json.dump(calorie_daily_target_data, file, indent=4)
                     print(f'Calorie target {calorie_daily_target} has been updated.')
             finally: 
@@ -70,36 +70,29 @@ def main():
                 #add method/function to return to menu for options
         
         case 2:
-            calories_total_data = None
+            today = date.today().isoformat()#today date
+            calories_entry = int(input('Add to today entry: '))
+            
             try:
                 with open('calories_total_data.json','r',encoding='utf-8') as file:
-                    json.load(calories_total_data)
-                    print('calories total data read')
+                    calories_data = json.load(file)#assign name to file when loads
                     
-                with open('calories_total_data.json', 'w', encoding='utf-8') as file:
-                    json.dump(calories_total_data, file, indent=4)
-                    print('total calories data created')
-                
             except FileNotFoundError:
-                print('oops!')
-
-            finally:
-                print('xxxxxxx')#test purposes
-                #to add return to main menu or quit method 
-        
-            # calories_entry = int(input('add calories to today: '))
-            today = date.today().isoformat()
-            #calories_total_data json file
-            
-            today_entry = {'date':today, 'calories':[]}#dictionary variable
-            calories_total_data.append(today_entry)#appended to calories total data
-            
-            with open('calories_total_data.json', 'w', encoding='utf-8') as file:
-                json.dump(calories_total_data, file, indent=4)
-                print('calories saved')
+                calories_data = {'calories':[].append(calories_entry)}#assigning dictionary to variable
+                print(calories_data)
                 
-            print(f"Calories added today: {today_entry['Calories']}")
-            print(f"Total calories consumed today: {today_entry['Total calories consumed today']}")
+                
+                
+                
+                today_entry = {'date':today, 'calories':[]}#dictionary variable
+                calories_data.append(today_entry)#appended to calories total data
+                today_entry['calories'].append(calories_data)  # appended to calories total data
+                calories_data = {'Calorie entry':[]}  
+             
+            with open('calories_total_data.json', 'w', encoding='utf-8') as file:
+                    json.dump(calories_data, file, indent=4)
+                    print(calories_data)
+
             
         case 3:
             print('Help')
