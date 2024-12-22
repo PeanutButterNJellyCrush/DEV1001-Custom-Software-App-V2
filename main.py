@@ -71,14 +71,30 @@ def main():
         
         case 2:
             calories_daily_target = 2000 #would like to change this to inherite from case 1 
-            calories_entry_data = [] #put into list
+            data = {
+                'daily target':calories_daily_target,
+                'entry':[]
+            }
+
+            try:
+
+                with open('calories_entry.json','r',encoding='utf-8') as file:
+                    data = json.load(file)
+                    print('entry has been loaded')
+
+            except FileNotFoundError:
+            # If file doesn't exist, create it with new data
+                with open('calories_entry.json','w',encoding='utf-8') as file:
+                    json.dump(data, file, indent=4)
+                    print('entry has been created')
+
             remaining_calories = calories_daily_target #to minus from
 
             today = date.today().isoformat() #today date
             calories_entry = int(input('Add to today entry: '))
             print(calories_entry,today)
             
-            calories_entry_data.append({
+            data['entry'].append({
                 'date': today,
                 'calories': calories_entry
             })
@@ -86,11 +102,6 @@ def main():
 
             print(f'{remaining_calories} for the day.')
             print(remaining_calories)
-            
-            data = {
-                'daily target':calories_daily_target,
-                'entry':calories_entry_data
-            }
             
             with open('calories_entry.json','w',encoding='utf-8') as file:
                 json.dump(data,file)
