@@ -111,9 +111,16 @@ def main():
             print('Help')
             print('Follow the menu instructions to track and view your calories')
             #to do return_to_menu = ('Enter any key to return to menu')
+            
+            help_text = """
+            HELP
+            
+            """
+          
      
         
         case 4:
+            def quit_calorie_app():
             print('Quit')
             
             
